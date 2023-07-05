@@ -7,6 +7,7 @@ import {
   TextInput,
   ImageBackground,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 
 const Start = ({ navigation }) => {
@@ -86,6 +87,9 @@ const Start = ({ navigation }) => {
           </View>
         </View>
       </View>
+      {Platform.OS === "ios" ? (
+        <KeyboardAvoidingView behavior="padding" />
+      ) : null}
     </ImageBackground>
   );
 };
@@ -93,7 +97,7 @@ const Start = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
   },
   image: {
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
   },
   chatcontainer: {
     width: "88%",
-    height: "44%",
+    height: 300,
     backgroundColor: "#FFFFFF",
     alignItems: "center",
   },
