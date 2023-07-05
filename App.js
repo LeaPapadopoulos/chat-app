@@ -1,7 +1,3 @@
-// Initialize Firebase and Firestore
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-
 // import the screens we want to navigate
 import Start from "./components/Start";
 import Chat from "./components/Chat";
@@ -12,6 +8,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Create the navigator
 const Stack = createNativeStackNavigator();
+
+// Initialize Firebase and Firestore
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 const App = () => {
   // Your web app's Firebase configuration
@@ -26,6 +26,9 @@ const App = () => {
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+
+  // Initialize Cloud Firestore and get a reference to the service
+  const db = getFirestore(app);
 
   return (
     <NavigationContainer>
