@@ -1,3 +1,9 @@
+import { useEffect } from "react";
+import { Alert } from "react-native";
+
+// import netinfo for Detecting a Network Connection
+import { useNetInfo } from "@react-native-community/netinfo";
+
 // import the screens we want to navigate
 import Start from "./components/Start";
 import Chat from "./components/Chat";
@@ -11,9 +17,25 @@ const Stack = createNativeStackNavigator();
 
 // Initialize Firebase and Firestore
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  disableNetwork,
+  enableNetwork,
+} from "firebase/firestore";
 
 const App = () => {
+  // define a new state that represents the network connectivity status
+  const connectionStatus = useNetInfo();
+
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) {
+      Alert.alert("Connection Lost!");
+      disableNetwork(db);
+    } else if (connectionStatus.isConnected === true) {
+      enableNetwork(db);
+    }
+  }, [connectionStatus.isConnected]);
+
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyDchaPzF-tgENZ6faXUGL1JceM9DWBHRbg",
@@ -35,7 +57,13 @@ const App = () => {
       <Stack.Navigator initialRouteName="Start">
         <Stack.Screen name="Start" component={Start} />
         <Stack.Screen name="Chat">
-          {(props) => <Chat db={db} {...props} />}
+          {(props) => (
+            <Chat
+              isConnected={connectionStatus.isConnected}
+              db={db}
+              {...props}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
