@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, KeyboardAvoidingView } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import {
   collection,
   addDoc,
@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Chat = ({ route, navigation, db }) => {
+const Chat = ({ route, navigation, db, isConnected }) => {
   const { name, userID } = route.params;
   const { color } = route.params;
   const [messages, setMessages] = useState([]);
@@ -38,7 +38,7 @@ const Chat = ({ route, navigation, db }) => {
             const createdAt = doc.data().createdAt.toDate(); // Convert Timestamp to Date
             newMessages.push({ id: doc.id, ...doc.data(), createdAt });
           });
-          cacheMessages(newLists);
+          cacheMessages(newMessages);
           setMessages(newMessages);
         }
       );
@@ -50,47 +50,29 @@ const Chat = ({ route, navigation, db }) => {
     };
   }, [isConnected]);
 
-  const cacheMessages = async (listsToCache) => {
+  const cacheMessages = async (messagesToCache) => {
     try {
-      await AsyncStorage.setItem("messages-list", JSON.stringify(newMessages));
+      await AsyncStorage.setItem("messages", JSON.stringify(messagesToCache));
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  let unsubShoppinglists;
+  const loadCachedMessages = async () => {
+    const cachedMessages = (await AsyncStorage.getItem("messages")) || [];
+    setMessages(JSON.parse(cachedMessages));
+  };
 
-  useEffect(() => {
-    if (isConnected === true) {
-      // unregister current onSnapshot() listener to avoid registering multiple listeners when
-      // useEffect code is re-executed.
-      if (unsubShoppinglists) unsubShoppinglists();
-      unsubShoppinglists = null;
-
-      const q = query(
-        collection(db, "shoppinglists"),
-        where("uid", "==", userID)
-      );
-      unsubShoppinglists = onSnapshot(q, (documentsSnapshot) => {
-        let newLists = [];
-        documentsSnapshot.forEach((doc) => {
-          newLists.push({ id: doc.id, ...doc.data() });
-        });
-        cacheShoppingLists(newLists);
-        setLists(newLists);
-      });
-    } else loadCachedLists();
-
-    // Clean up code
-    return () => {
-      if (unsubShoppinglists) unsubShoppinglists();
-    };
-  }, [isConnected]);
+  const renderInputToolbar = (props) => {
+    if (isConnected) return <InputToolbar {...props} />;
+    else return null;
+  };
 
   return (
     <View style={styles.container} backgroundColor={color}>
       <GiftedChat
         messages={messages}
+        renderInputToolbar={renderInputToolbar}
         onSend={(messages) => onSend(messages)}
         user={{
           _id: userID,
