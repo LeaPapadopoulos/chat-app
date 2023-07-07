@@ -27,15 +27,6 @@ const App = () => {
   // define a new state that represents the network connectivity status
   const connectionStatus = useNetInfo();
 
-  useEffect(() => {
-    if (connectionStatus.isConnected === false) {
-      Alert.alert("Connection Lost!");
-      disableNetwork(db);
-    } else if (connectionStatus.isConnected === true) {
-      enableNetwork(db);
-    }
-  }, [connectionStatus.isConnected]);
-
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyDchaPzF-tgENZ6faXUGL1JceM9DWBHRbg",
@@ -51,6 +42,15 @@ const App = () => {
 
   // Initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app);
+
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) {
+      Alert.alert("Connection Lost!");
+      disableNetwork(db);
+    } else if (connectionStatus.isConnected === true) {
+      enableNetwork(db);
+    }
+  }, [connectionStatus.isConnected]);
 
   return (
     <NavigationContainer>
