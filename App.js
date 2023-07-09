@@ -21,8 +21,8 @@ import {
   getFirestore,
   disableNetwork,
   enableNetwork,
-  getStorage,
 } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const App = () => {
   // define a new state that represents the network connectivity status
