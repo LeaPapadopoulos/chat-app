@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, KeyboardAvoidingView } from "react-native";
-import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
+import {
+  GiftedChat,
+  InputToolbar,
+  renderActions,
+} from "react-native-gifted-chat";
 import {
   collection,
   addDoc,
@@ -10,6 +14,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomActions from "./CustomActions";
 
 const Chat = ({ route, navigation, db, isConnected }) => {
   const { name, userID } = route.params;
@@ -68,11 +73,16 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     else return null;
   };
 
+  const renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
+
   return (
     <View style={styles.container} backgroundColor={color}>
       <GiftedChat
         messages={messages}
         renderInputToolbar={renderInputToolbar}
+        renderActions={renderCustomActions}
         onSend={(messages) => onSend(messages)}
         user={{
           _id: userID,
