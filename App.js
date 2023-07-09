@@ -21,6 +21,7 @@ import {
   getFirestore,
   disableNetwork,
   enableNetwork,
+  getStorage,
 } from "firebase/firestore";
 
 const App = () => {
@@ -42,6 +43,7 @@ const App = () => {
 
   // Initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   useEffect(() => {
     if (connectionStatus.isConnected === false) {
@@ -61,6 +63,7 @@ const App = () => {
             <Chat
               isConnected={connectionStatus.isConnected}
               db={db}
+              storage={storage}
               {...props}
             />
           )}
