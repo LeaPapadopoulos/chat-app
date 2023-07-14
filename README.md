@@ -2,6 +2,12 @@
 
 ChatMe is a simple chat application built with React Native. It allows users to enter their name, select a background color, and start chatting with others.
 
+# App Screenshots
+
+![View](chat3.png)
+![View2](chat2.png)
+![View3](chat1.png)
+
 ## Tech Stack
 
 - React Native
